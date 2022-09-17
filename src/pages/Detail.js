@@ -7,6 +7,9 @@ import styled from 'styled-components';
 // 장점1. 귀찮게 CSS파일까지 갈 필요없음
 // 장점2. 스타일이 다른 js파일로 오염되지않음 (.module.css도 지원하는 기능이긴함)
 // 장점3. 페이지 로딩시간 단축
+// 단점1. JS파일이 매우 복잡해짐 (이게 일반 컴포넌트인지 styled인지 구분 힘듦)
+// 단점2. JS파일 간 중복 디자인이 많이 필요하다면 export/import 해줘야함==일반 CSS랑 차이없음
+// 단점3. CSS담당이 styled-components 문법을 모른다면...? (웹디자이너와의 협업 힘듦)
 
 const Button = styled.button`
 	background: ${(props) => props.bg};
