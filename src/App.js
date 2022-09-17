@@ -4,11 +4,12 @@ import './App.css';
 import { Container, Nav, Navbar } from 'react-bootstrap';
 import { useState } from 'react';
 import data from './data';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './pages/Detail';
 
 function App() {
 	let [shoes] = useState(data);
+	let navigate = useNavigate();
 	return (
 		<div className='App'>
 			<Navbar bg='light' variant='light'>
@@ -18,9 +19,11 @@ function App() {
 						<Link to='/' className='nav-link'>
 							Home
 						</Link>
-						<Link to='/detail' className='nav-link'>
-							Detail
-						</Link>
+						<Nav.Link onClick={() => navigate('/detail')}>Detail</Nav.Link>
+						{/* 
+              navigate(-1) 뒤로가기
+              navigate(1) 앞으로가기
+            */}
 					</Nav>
 				</Container>
 			</Navbar>
@@ -42,7 +45,42 @@ function App() {
 					}
 				/>
 				<Route path='/detail' element={<Detail />} />
+				{/* Nested Routes */}
+				{/* 
+          장점1. 좀 더 직관적
+          장점2. 상하위 element를 동시에 보여줄 수 있음 (부모라우트에 Outlet으로 자리 만들어줘야함)
+        */}
+				<Route path='/about' element={<About />}>
+					<Route path='member' element={<div>멤버임</div>} />
+					<Route path='location' element={<div>위치정보임</div>} />
+				</Route>
+				{/* 숙제 */}
+				<Route path='/event' element={<Event />}>
+					<Route path='one' element={<div>첫 주문시 양배추즙 서비스</div>} />
+					<Route path='two' element={<div>생일기념 쿠폰받기</div>} />
+				</Route>
+				<Route path='*' element={<h4>404페이지</h4>} />
 			</Routes>
+		</div>
+	);
+}
+
+function About() {
+	return (
+		<div>
+			<h4>회사정보임</h4>
+			{/* Nested Route를 보여줄 자리 */}
+			<Outlet />
+		</div>
+	);
+}
+
+function Event() {
+	return (
+		<div>
+			<h4>오늘의 이벤트</h4>
+			{/* Nested Route를 보여줄 자리 */}
+			<Outlet />
 		</div>
 	);
 }
