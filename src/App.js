@@ -44,7 +44,8 @@ function App() {
 						</>
 					}
 				/>
-				<Route path='/detail' element={<Detail />} />
+				{/* URL Parameter */}
+				<Route path='/detail/:id' element={<Detail shoes={shoes} />} />
 				{/* Nested Routes */}
 				{/* 
           장점1. 좀 더 직관적
