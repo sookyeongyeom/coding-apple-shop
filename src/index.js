@@ -7,6 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
+	// StrictMode 켜놓으면 디버깅을 위해 useEffect등 특정 코드가 두번 실행될 수 있음
 	<React.StrictMode>
 		<BrowserRouter>
 			<App />

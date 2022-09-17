@@ -1,5 +1,7 @@
 /* eslint-disable */
 
+import { useState } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -26,7 +28,33 @@ const BlackBox = styled.div`
 	padding: 20px;
 `;
 
+// 옛날 방식
+// class Detail2 extends React.Component {
+//   componentDidMount() {
+//     // mount
+//   }
+//   componentDidUpdate() {
+//     // update
+//   }
+//   componentWillUnmount() {
+//     // unmount
+//   }
+// }
+
 function Detail(props) {
+	// useEffect 쓰는 이유 (Effect = Side Effect에서 따옴)
+	// useEffect안에 있는 코드는 html렌더링이 끝난 후에 동작을 시작하기 때문에
+	// 시간이 오래 걸리는 연산의 경우 useEffect안에서 실행하는 것이 좋다
+	// 외부에서 실행하면 순서대로 연산이 처리되기 때문에 html리렌더링이 너무 늦어진다
+	// Ex. 어려운 연산, 서버에서 데이터 가져오기, 타이머 장착 등
+	useEffect(() => {
+		// mount, update시 여기 코드 실행됨
+		setTimeout(() => {
+			setDiscount(false);
+		}, 2000);
+	});
+
+	let [discount, setDiscount] = useState(true);
 	let { id } = useParams();
 	// 응용문제. 자료의 순서가 변경되면 상세페이지도 고장나는 문제는 어떻게 해결할까요?
 	let shoe = props.shoes.find((shoe) => shoe.id === +id);
@@ -38,6 +66,7 @@ function Detail(props) {
 					<Button bg='lightpink'>버튼</Button>
 					<Button bg='gray'>버튼</Button>
 				</BlackBox> */}
+				{discount ? <div className='alert alert-warning'>2초 이내 구매 시 할인</div> : ''}
 				<div className='row'>
 					<div className='col-md-6'>
 						<img src={`https://codingapple1.github.io/shop/shoes${+id + 1}.jpg`} width='100%' />
