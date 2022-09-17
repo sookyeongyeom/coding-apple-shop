@@ -14,14 +14,14 @@ function App() {
 					<Navbar.Brand href='#home'>ShoeShop</Navbar.Brand>
 					<Nav className='me-auto'>
 						<Nav.Link href='#home'>Home</Nav.Link>
-						<Nav.Link href='#features'>Cart</Nav.Link>
+						<Nav.Link href='#cart'>Cart</Nav.Link>
 					</Nav>
 				</Container>
 			</Navbar>
 			<div className='main-bg'></div>
 			<div className='container'>
 				<div className='row'>
-					{data.map((shoe, idx) => {
+					{shoes.map((shoe, idx) => {
 						return <Shoe shoe={shoe} idx={idx} key={idx} />;
 					})}
 				</div>
