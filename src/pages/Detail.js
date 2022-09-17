@@ -28,6 +28,30 @@ const BlackBox = styled.div`
 	padding: 20px;
 `;
 
+const NumInputBox = styled.input`
+	display: block;
+	width: 40%;
+	height: 50px;
+	border: 4px solid #dc3545;
+	margin: 0 auto;
+
+	&:focus {
+		outline: none;
+	}
+`;
+
+const NotNumAlert = styled.div`
+	width: 60%;
+	height: 50px;
+	line-height: 50px;
+	font-size: 28px;
+	background-color: #dc3545;
+	color: #fff;
+	margin: 0 auto;
+	margin-bottom: 30px;
+	overflow: hidden;
+`;
+
 // 옛날 방식
 // class Detail2 extends React.Component {
 //   componentDidMount() {
@@ -42,23 +66,45 @@ const BlackBox = styled.div`
 // }
 
 function Detail(props) {
+	let [discount, setDiscount] = useState(true);
+	let [count, setCount] = useState(0);
+	let [count2, setCount2] = useState(0);
+	let [num, setNum] = useState(0);
+	let [notNumAlert, setNotNumAlert] = useState(false);
+	let { id } = useParams();
+	// 응용문제. 자료의 순서가 변경되면 상세페이지도 고장나는 문제는 어떻게 해결할까요?
+	let shoe = props.shoes.find((shoe) => shoe.id === +id);
+	// let [shoe] = props.shoes.filter((shoe) => shoe.id === +id);
+
 	// useEffect 쓰는 이유 (Effect = Side Effect에서 따옴)
 	// useEffect안에 있는 코드는 html렌더링이 끝난 후에 동작을 시작하기 때문에
 	// 시간이 오래 걸리는 연산의 경우 useEffect안에서 실행하는 것이 좋다
 	// 외부에서 실행하면 순서대로 연산이 처리되기 때문에 html리렌더링이 너무 늦어진다
 	// Ex. 어려운 연산, 서버에서 데이터 가져오기, 타이머 장착 등
 	useEffect(() => {
-		// mount, update시 여기 코드 실행됨
-		setTimeout(() => {
+		// mount시 || 디펜던시 update시 여기 코드 실행됨
+		const timer = setTimeout(() => {
 			setDiscount(false);
 		}, 2000);
-	});
+		console.log('mount');
 
-	let [discount, setDiscount] = useState(true);
-	let { id } = useParams();
-	// 응용문제. 자료의 순서가 변경되면 상세페이지도 고장나는 문제는 어떻게 해결할까요?
-	let shoe = props.shoes.find((shoe) => shoe.id === +id);
-	// let [shoe] = props.shoes.filter((shoe) => shoe.id === +id);
+		// 숙제. 유저가 숫자 말고 다른걸 입력하면 경고메세지 출력하기
+		if (isNaN(num)) setNotNumAlert(true);
+		else setNotNumAlert(false);
+
+		return () => {
+			// useEffect 동작 전에 실행되는 부분 = clean-up function으로 사용
+			// mount시 실행안됨, unmount시에는 실행됨
+			// Ex. 기존 타이머 제거, 기존 데이터 요청 제거
+			console.log('clean-up');
+			clearTimeout(timer);
+		};
+	}, [num]);
+	// useEffect 디펜던시에 대해
+	// 파라미터 생략하면 = mount시 + 어떤 state update라도 무조건 실행
+	// [] = mount시에만 실행 + 어떤 state update에도 실행되지 않음
+	// [count] = mount시 + count update시에만 실행
+
 	return (
 		<>
 			<div className='container'>
@@ -66,10 +112,25 @@ function Detail(props) {
 					<Button bg='lightpink'>버튼</Button>
 					<Button bg='gray'>버튼</Button>
 				</BlackBox> */}
-				{discount ? <div className='alert alert-warning'>2초 이내 구매 시 할인</div> : ''}
+				{count}{' '}
+				<Button bg='lightblue' onClick={() => setCount(count + 1)}>
+					+1
+				</Button>
+				<br />
+				{count2}{' '}
+				<Button bg='lightpink' onClick={() => setCount2(count2 + 1)}>
+					+1
+				</Button>
+				{/* 리액트적 사고방식 = 엘리먼트를 직접 조작하는게 아니라 스위치 달아놓고 스위치를 조작! */}
+				{discount ? <div className='alert alert-warning'>2초 이내 구매 시 할인</div> : null}
 				<div className='row'>
 					<div className='col-md-6'>
 						<img src={`https://codingapple1.github.io/shop/shoes${+id + 1}.jpg`} width='100%' />
+					</div>
+					{/* 숙제. 유저가 숫자 말고 다른걸 입력하면 경고메세지 출력하기 */}
+					<div className='col-md-6'>
+						{notNumAlert ? <NotNumAlert>경고 : 숫자만 입력하세요</NotNumAlert> : null}
+						<NumInputBox onChange={(e) => setNum(e.target.value)} />
 					</div>
 					<div className='col-md-6'>
 						<h4 className='pt-5'>{shoe.title}</h4>
