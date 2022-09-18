@@ -10,6 +10,7 @@ import Cart from './pages/Cart';
 import axios from 'axios';
 import styled from 'styled-components';
 import { useEffect } from 'react';
+import { useQuery } from 'react-query';
 
 const Button = styled.button`
 	background: ${(props) => props.bg};
@@ -48,6 +49,19 @@ function App() {
 	let [loading, setLoading] = useState(false);
 	let navigate = useNavigate();
 
+	// react-query 장점 (실시간으로 왔다갔다하는 데이터 보여줘야하는 경우 유용함)
+	// 장점1. 성공/실패/로딩중 쉽게 파악하고 상태를 사용할 수 있음 (state만들필요X)
+	// 장점2. 틈만나면 자동으로 refetch해줌 (시간간격조절가능, 끌수도있음)
+	// 장점3. 실패시 retry알아서해줌
+	// 장점4. state공유 안해도 됨 (서로 다른 컴포넌트가 같은 곳으로 중복요청보내도 합쳐서 하나만 보내줌)
+	// 장점5. ajax결과 캐싱가능 (기존성공결과를 보여준 상태에서 새로운요청보내기때문에 더 빠른느낌이듦)
+	let result = useQuery('작명', () => {
+		return axios.get('https://codingapple1.github.io/userdata.json').then((a) => {
+			console.log('요청됨!');
+			return a.data;
+		});
+	});
+
 	useEffect(() => {
 		// watched기록 없으면 초기화해줌
 		if (!localStorage.getItem('watched')) localStorage.setItem('watched', JSON.stringify([]));
@@ -67,6 +81,12 @@ function App() {
               navigate(-1) 뒤로가기
               navigate(1) 앞으로가기
             */}
+					</Nav>
+					<Nav className='ms-auto'>
+						{/* {result.isLoading ? 'Loading..' : `반가워요 ${result.data.name}님`} */}
+						{result.isLoading && 'Loading...'}
+						{result.error && 'ERROR ;ㅅ;'}
+						{result.data && `반가워요 ${result.data.name}님`}
 					</Nav>
 				</Container>
 			</Navbar>
