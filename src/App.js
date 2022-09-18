@@ -6,6 +6,7 @@ import { createContext, useState } from 'react';
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './pages/Detail';
+import Cart from './pages/Cart';
 import axios from 'axios';
 import styled from 'styled-components';
 
@@ -44,7 +45,7 @@ function App() {
 						<Link to='/' className='nav-link'>
 							Home
 						</Link>
-						<Nav.Link onClick={() => navigate('/detail/0')}>Detail</Nav.Link>
+						<Nav.Link onClick={() => navigate('/cart')}>Cart</Nav.Link>
 						{/* 
               navigate(-1) 뒤로가기
               navigate(1) 앞으로가기
@@ -143,6 +144,7 @@ function App() {
 					<Route path='member' element={<div>멤버임</div>} />
 					<Route path='location' element={<div>위치정보임</div>} />
 				</Route>
+				<Route path='/cart' element={<Cart />} />
 				{/* 숙제 */}
 				<Route path='/event' element={<Event />}>
 					<Route path='one' element={<div>첫 주문시 양배추즙 서비스</div>} />
