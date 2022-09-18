@@ -2,7 +2,7 @@
 
 import './App.css';
 import { Container, Nav, Navbar } from 'react-bootstrap';
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './pages/Detail';
@@ -18,8 +18,19 @@ const Button = styled.button`
 	margin: 10px;
 `;
 
+// Context API = props없이 state사용가능하게 해주는 리액트기본문법
+// Context = state 보관함
+// export로 내보내야 다른 곳에서 import가능
+export let Context1 = createContext();
+// Contect API 단점
+// 단점1. state변경시 쓸데없는것까지 재렌더링 = 성능이슈
+// 단점2. 나중에 컴포넌트 재사용이 어려움 = TabContent를 다른 부모가 갖다쓰면 Context1없다고 오류날수있음
+// 따라서 보통 외부 라이브러리(리덕스)를 사용함
+
 function App() {
 	let [shoes, setShoes] = useState(data);
+	// Context API로 공유원하는 state생성
+	let [재고] = useState([10, 11, 12]);
 	// 응용1. 버튼 2회 누르면 7,8,9번 상품 가져오기
 	let [pageCount, setPageCount] = useState(1);
 	let [loading, setLoading] = useState(false);
@@ -112,7 +123,17 @@ function App() {
 					}
 				/>
 				{/* URL Parameter */}
-				<Route path='/detail/:id' element={<Detail shoes={shoes} />} />
+
+				<Route
+					path='/detail/:id'
+					element={
+						// <Context이름.Provider>로 state공유를 원하는 컴포넌트 감싸기
+						<Context1.Provider value={{ 재고 }}>
+							<Detail shoes={shoes} />
+						</Context1.Provider>
+					}
+				/>
+
 				{/* Nested Routes */}
 				{/* 
           장점1. 좀 더 직관적

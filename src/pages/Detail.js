@@ -1,10 +1,11 @@
 /* eslint-disable */
 
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import { Nav } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { Context1 } from './../App';
 
 // styled-components
 // 장점1. 귀찮게 CSS파일까지 갈 필요없음
@@ -67,6 +68,8 @@ const NotNumAlert = styled.div`
 // }
 
 function Detail(props) {
+	// 보관함 해체
+	let { 재고 } = useContext(Context1);
 	let [discount, setDiscount] = useState(true);
 	let [count, setCount] = useState(0);
 	let [count2, setCount2] = useState(0);
@@ -184,6 +187,8 @@ function Detail(props) {
 
 // 팁1. 파라미터에서 props destructuring
 function TabContent({ activeTab }) {
+	// 보관함 해체 = 자손 컴포넌트에서도 props전달없이 보관함 해체해서 갖다쓸수있음
+	let { 재고 } = useContext(Context1);
 	let [fade, setFade] = useState('');
 	// activeTab state가 변할 때 end 탈부착
 	// react automatic batching(state 한번에 변경)때문에 같은 함수내에서 시간차 줄 수 없음
@@ -208,7 +213,7 @@ function TabContent({ activeTab }) {
 	// 이렇게 리팩하면 훨씬 간단해짐 ㄷㄷ
 	return (
 		<div className={`start ${fade}`}>
-			{[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][activeTab]}
+			{[<div>{재고[0]}</div>, <div>내용1</div>, <div>내용2</div>][activeTab]}
 		</div>
 	);
 }
