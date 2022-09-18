@@ -156,7 +156,9 @@ function Event() {
 function Shoe(props) {
 	return (
 		<div className='col-md-4'>
-			<img src={`https://codingapple1.github.io/shop/shoes${props.idx + 1}.jpg`} width='80%' />
+			<Link to={`/detail/${props.shoe.id}`}>
+				<img src={`https://codingapple1.github.io/shop/shoes${props.idx + 1}.jpg`} width='80%' />
+			</Link>
 			<h4>{props.shoe.title}</h4>
 			<p>
 				{props.shoe.content}
