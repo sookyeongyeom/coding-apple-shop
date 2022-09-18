@@ -73,6 +73,7 @@ function Detail(props) {
 	let [num, setNum] = useState(0);
 	let [notNumAlert, setNotNumAlert] = useState(false);
 	let [activeTab, setActiveTab] = useState(0);
+	let [fadePage, setFadePage] = useState('');
 	let { id } = useParams();
 	// 응용문제. 자료의 순서가 변경되면 상세페이지도 고장나는 문제는 어떻게 해결할까요?
 	let shoe = props.shoes.find((shoe) => shoe.id === +id);
@@ -97,6 +98,7 @@ function Detail(props) {
 		return () => {
 			// useEffect 동작 전에 실행되는 부분 = clean-up function으로 사용
 			// mount시 실행안됨, unmount시에는 실행됨
+			// 디펜던시 update시 먼저 실행되는 부분
 			// Ex. 기존 타이머 제거, 기존 데이터 요청 제거
 			console.log('clean-up');
 			clearTimeout(timer);
@@ -107,8 +109,17 @@ function Detail(props) {
 	// [] = mount시에만 실행 + 어떤 state update에도 실행되지 않음
 	// [count] = mount시 + count update시에만 실행
 
+	// DetailPage mount시 end 부착하여 fade효과 주기
+	useEffect(() => {
+		setFadePage('end');
+		return () => {
+			// 디펜던시 없으므로, unmount시에만 동작
+			setFadePage('');
+		};
+	}, []);
+
 	return (
-		<>
+		<div className={`start ${fadePage}`}>
 			<div className='container'>
 				{/* <BlackBox>
 					<Button bg='lightpink'>버튼</Button>
@@ -145,7 +156,6 @@ function Detail(props) {
 						<button className='btn btn-danger'>주문하기</button>
 					</div>
 				</div>
-
 				<Nav variant='tabs' defaultActiveKey='link0' style={{ marginTop: '20px' }}>
 					<Nav.Item>
 						<Nav.Link eventKey='link0' onClick={() => setActiveTab(0)}>
@@ -168,12 +178,25 @@ function Detail(props) {
 				{activeTab === 2 ? <div>내용2</div> : null} */}
 				<TabContent activeTab={activeTab} />
 			</div>
-		</>
+		</div>
 	);
 }
 
 // 팁1. 파라미터에서 props destructuring
 function TabContent({ activeTab }) {
+	let [fade, setFade] = useState('');
+	// activeTab state가 변할 때 end 탈부착
+	// react automatic batching(state 한번에 변경)때문에 같은 함수내에서 시간차 줄 수 없음
+	// 따라서 타이머를 사용해야함
+	useEffect(() => {
+		let timer = setTimeout(() => {
+			setFade('end');
+		}, 10);
+		return () => {
+			clearTimeout(timer);
+			setFade('');
+		};
+	}, [activeTab]);
 	// if (activeTab === 0) {
 	// 	return <div>내용0</div>;
 	// } else if (activeTab === 1) {
@@ -183,7 +206,11 @@ function TabContent({ activeTab }) {
 	// }
 	// 팁2. 센스좋으면 if 필요없을수도
 	// 이렇게 리팩하면 훨씬 간단해짐 ㄷㄷ
-	return [<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][activeTab];
+	return (
+		<div className={`start ${fade}`}>
+			{[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][activeTab]}
+		</div>
+	);
 }
 
 export default Detail;

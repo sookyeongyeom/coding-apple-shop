@@ -33,7 +33,7 @@ function App() {
 						<Link to='/' className='nav-link'>
 							Home
 						</Link>
-						<Nav.Link onClick={() => navigate('/detail')}>Detail</Nav.Link>
+						<Nav.Link onClick={() => navigate('/detail/0')}>Detail</Nav.Link>
 						{/* 
               navigate(-1) 뒤로가기
               navigate(1) 앞으로가기
