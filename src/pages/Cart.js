@@ -3,7 +3,7 @@
 import { Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { increaseAge } from './../store/userSlice';
-import { increaseQuantity, sortCartById } from './../store/cartSlice';
+import { increaseQuantity, removeFromCart, sortCartById } from './../store/cartSlice';
 import styled from 'styled-components';
 
 const Button = styled.button`
@@ -32,6 +32,7 @@ function Cart() {
 				</Button>
 			</h4>
 			<div style={{ textAlign: 'left', margin: '10px' }}>
+				<h6>총 항목 : {cart.length}</h6>
 				<Button
 					bg='lightblue'
 					onClick={() => {
@@ -48,6 +49,7 @@ function Cart() {
 						<th>상품명</th>
 						<th>수량</th>
 						<th>변경하기</th>
+						<th>삭제하기</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -59,7 +61,7 @@ function Cart() {
 								<td>{item.name}</td>
 								<td>{item.count}</td>
 								<td>
-									<Button
+									<button
 										bg='transparent'
 										// dispatch로 감싸서 사용해야함
 										// 이 자리에서 실행하는것이 아니라,
@@ -67,8 +69,18 @@ function Cart() {
 										onClick={() => {
 											dispatch(increaseQuantity(item.id));
 										}}>
-										💛
-									</Button>
+										+
+									</button>
+								</td>
+								{/* 응용1. 장바구니 삭제 기능 */}
+								<td>
+									<button
+										bg='transparent'
+										onClick={() => {
+											dispatch(removeFromCart(item.id));
+										}}>
+										x
+									</button>
 								</td>
 							</tr>
 						);

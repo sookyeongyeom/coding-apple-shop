@@ -70,8 +70,6 @@ const NotNumAlert = styled.div`
 // }
 
 function Detail(props) {
-	// useSelector = Redux store 가져와줌
-	let { cart } = useSelector((state) => state);
 	// store.js에 요청보내는 함수
 	let dispatch = useDispatch();
 
