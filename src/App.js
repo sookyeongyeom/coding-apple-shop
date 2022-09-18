@@ -60,8 +60,7 @@ function App() {
 										.then((결과) => {
 											const moreShoes = 결과.data;
 											// 신발 더보기
-											let copy = shoes;
-											copy = [...copy, ...moreShoes];
+											let copy = [...shoes, ...moreShoes];
 											setShoes(copy);
 										})
 										.catch(() => {
