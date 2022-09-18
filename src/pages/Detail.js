@@ -117,9 +117,20 @@ function Detail(props) {
 	// [] = mount시에만 실행 + 어떤 state update에도 실행되지 않음
 	// [count] = mount시 + count update시에만 실행
 
-	// DetailPage mount시 end 부착하여 fade효과 주기
 	useEffect(() => {
+		// DetailPage mount시 end 부착하여 fade효과 주기
 		setFadePage('end');
+		// ********************************************************
+		// 상세페이지 방문시 로컬스토리지에 상품id 저장
+		let watched = JSON.parse(localStorage.getItem('watched'));
+		// 중복 제거 (최근 기록 갱신 안됨)
+		// watched.push(id);
+		// const watchedSet = Array.from(new Set(watched));
+		// 최근 기록으로 갱신
+		watched = watched.filter((data) => data != id);
+		watched.push(+id);
+		localStorage.setItem('watched', JSON.stringify(watched));
+		// ********************************************************
 		return () => {
 			// 디펜던시 없으므로, unmount시에만 동작
 			setFadePage('');

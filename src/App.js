@@ -9,6 +9,7 @@ import Detail from './pages/Detail';
 import Cart from './pages/Cart';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useEffect } from 'react';
 
 const Button = styled.button`
 	background: ${(props) => props.bg};
@@ -29,6 +30,16 @@ export let Context1 = createContext();
 // 따라서 보통 외부 라이브러리(리덕스)를 사용함
 
 function App() {
+	// ********************************************************
+	// 로컬스토리지 (로컬스토리지는 따로 브라우저청소시에만 휘발, 세션스토리지는 껐다키면 휘발)
+	let obj = { name: 'choco' };
+	// 로컬스토리지는 문자열만 잡고 있을 수 있으므로 오브젝트를 넣고 싶으면 JSON(문자열)으로 변환해서 넣어야함
+	// JSON은 문자열 취급을 받는다고 생각하면됨
+	localStorage.setItem('data', JSON.stringify(obj));
+	let out = localStorage.getItem('data');
+	// 당연히 문자열인채로 꺼내지기때문에 꺼낸 후 오브젝트로 재파싱해야 정상적으로 사용할 수 있음
+	console.log(JSON.parse(out).name);
+	// ********************************************************
 	let [shoes, setShoes] = useState(data);
 	// Context API로 공유원하는 state생성
 	let [재고] = useState([10, 11, 12]);
@@ -36,6 +47,12 @@ function App() {
 	let [pageCount, setPageCount] = useState(1);
 	let [loading, setLoading] = useState(false);
 	let navigate = useNavigate();
+
+	useEffect(() => {
+		// watched기록 없으면 초기화해줌
+		if (!localStorage.getItem('watched')) localStorage.setItem('watched', JSON.stringify([]));
+	}, []);
+
 	return (
 		<div className='App'>
 			<Navbar bg='light' variant='light'>
