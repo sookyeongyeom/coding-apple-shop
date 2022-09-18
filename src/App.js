@@ -6,9 +6,20 @@ import { useState } from 'react';
 import data from './data';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './pages/Detail';
+import axios from 'axios';
+import styled from 'styled-components';
+
+const Button = styled.button`
+	background: ${(props) => props.bg};
+	color: ${(props) => (props.bg === 'gray' ? 'white' : 'black')};
+	padding: 5px 10px;
+	border: none;
+	border-radius: 6px;
+	margin: 10px;
+`;
 
 function App() {
-	let [shoes] = useState(data);
+	let [shoes, setShoes] = useState(data);
 	let navigate = useNavigate();
 	return (
 		<div className='App'>
@@ -41,6 +52,24 @@ function App() {
 									})}
 								</div>
 							</div>
+							<Button
+								bg='lightpink'
+								onClick={() => {
+									axios
+										.get('https://codingapple1.github.io/shop/data2.json') //
+										.then((결과) => {
+											const moreShoes = 결과.data;
+											// 신발 더보기
+											let copy = shoes;
+											copy = [...copy, ...moreShoes];
+											setShoes(copy);
+										})
+										.catch(() => {
+											console.log('실패함ㅠㅠ');
+										});
+								}}>
+								더보기
+							</Button>
 						</>
 					}
 				/>
