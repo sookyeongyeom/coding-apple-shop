@@ -11,7 +11,11 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { useEffect } from 'react';
 import { useQuery } from 'react-query';
+import PerformanceIssue from './pages/PerformanceIssue';
 
+// lazy로 임포트할시 해당 컴포넌트를 실제로 불러올때 로딩시간이 소요될수있으므로
+// Suspense로 해당 컴포넌트를 감싸 전환중 로딩화면을 띄울 수 있음
+// 아예 Routes를 감싸버리는게 편함
 const Detail = lazy(() => import('./pages/Detail.js'));
 const Cart = lazy(() => import('./pages/Cart.js'));
 
@@ -80,6 +84,7 @@ function App() {
 							Home
 						</Link>
 						<Nav.Link onClick={() => navigate('/cart')}>Cart</Nav.Link>
+						<Nav.Link onClick={() => navigate('/issue')}>Issue</Nav.Link>
 						{/* 
               navigate(-1) 뒤로가기
               navigate(1) 앞으로가기
@@ -186,6 +191,7 @@ function App() {
 						<Route path='location' element={<div>위치정보임</div>} />
 					</Route>
 					<Route path='/cart' element={<Cart />} />
+					<Route path='/issue' element={<PerformanceIssue />} />
 					{/* 숙제 */}
 					<Route path='/event' element={<Event />}>
 						<Route path='one' element={<div>첫 주문시 양배추즙 서비스</div>} />
