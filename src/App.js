@@ -20,6 +20,9 @@ const Button = styled.button`
 
 function App() {
 	let [shoes, setShoes] = useState(data);
+	// 응용1. 버튼 2회 누르면 7,8,9번 상품 가져오기
+	let [pageCount, setPageCount] = useState(1);
+	let [loading, setLoading] = useState(false);
 	let navigate = useNavigate();
 	return (
 		<div className='App'>
@@ -52,23 +55,59 @@ function App() {
 									})}
 								</div>
 							</div>
-							<Button
-								bg='lightpink'
-								onClick={() => {
-									axios
-										.get('https://codingapple1.github.io/shop/data2.json') //
-										.then((결과) => {
-											const moreShoes = 결과.data;
-											// 신발 더보기
-											let copy = [...shoes, ...moreShoes];
-											setShoes(copy);
-										})
-										.catch(() => {
-											console.log('실패함ㅠㅠ');
-										});
-								}}>
-								더보기
-							</Button>
+							{/* 응용3. 버튼 누르면 로딩중 안내 띄우기 */}
+							{loading ? (
+								<h4 className='alert alert-warning' style={{ margin: '0 auto', width: '30%' }}>
+									로딩중이에영 ;ㅅ;
+								</h4>
+							) : null}
+							{/* 응용2. 버튼 3회 누르면 상품 더 없다고 알려주기 */}
+							{pageCount < 3 ? (
+								<Button
+									bg='lightpink'
+									onClick={() => {
+										// 로딩중 안내 ON
+										setLoading(true);
+										// ********************************************************
+										// axios = ajax요청 쉽게 해주는 라이브러리
+										axios
+											.get(`https://codingapple1.github.io/shop/data${pageCount + 1}.json`) //
+											.then((결과) => {
+												// axios는 array나 object를 알아서 json으로 변환해줌
+												const moreShoes = 결과.data;
+												// 신발 더보기
+												let copy = [...shoes, ...moreShoes];
+												setShoes(copy);
+												// 더보기 요청횟수 기록
+												// 응용1. 버튼 2회 누르면 7,8,9번 상품 가져오기
+												setPageCount(pageCount + 1);
+												// 로딩중 안내 OFF
+												setLoading(false);
+											})
+											.catch(() => {
+												console.log('실패함ㅠㅠ');
+												// 로딩중 안내 OFF
+												setLoading(false);
+											});
+										// ********************************************************
+										// fetch를 쓰는 경우 = 직접 json으로 변환해줘야함
+										// fetch('/url0')
+										// 	.then((결과) => 결과.json())
+										// 	.then((data) => {});
+										// ********************************************************
+										// 다수의 요청이 모두 완료된 후 어떤 동작을 실행하려면
+										// Promise.all([axios.get('/url1'), axios.get('/url2')]) //
+										// 	.then(() => {
+										// 		//실행 원하는 동작은 여기
+										// 	});
+									}}>
+									더보기
+								</Button>
+							) : (
+								<div className='alert alert-danger' style={{ margin: 0 }}>
+									상품 더 없어요!
+								</div>
+							)}
 						</>
 					}
 				/>
