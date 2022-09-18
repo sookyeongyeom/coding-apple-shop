@@ -6,6 +6,8 @@ import { Nav } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Context1 } from './../App';
+import { addToCart } from './../store/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 // styled-components
 // 장점1. 귀찮게 CSS파일까지 갈 필요없음
@@ -68,6 +70,11 @@ const NotNumAlert = styled.div`
 // }
 
 function Detail(props) {
+	// useSelector = Redux store 가져와줌
+	let { cart } = useSelector((state) => state);
+	// store.js에 요청보내는 함수
+	let dispatch = useDispatch();
+
 	// 보관함 해체
 	let { 재고 } = useContext(Context1);
 	let [discount, setDiscount] = useState(true);
@@ -156,7 +163,9 @@ function Detail(props) {
 						<h4 className='pt-5'>{shoe.title}</h4>
 						<p>{shoe.content}</p>
 						<p>{shoe.price}원</p>
-						<button className='btn btn-danger'>주문하기</button>
+						<button className='btn btn-danger' onClick={() => dispatch(addToCart(shoe))}>
+							주문하기
+						</button>
 					</div>
 				</div>
 				<Nav variant='tabs' defaultActiveKey='link0' style={{ marginTop: '20px' }}>
